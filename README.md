@@ -161,9 +161,10 @@ Also: information for using ofxImGui within ofxAddons and for ofxImGui developer
 
 #### ofxImGui extensions
 - [moebiussurfing/ofxSurfingImGui](https://github.com/moebiussurfing/ofxSurfingImGui/): An extension to this addon which facilitates advanced integration with ofApps while also making the UI more user-friendly. It embeds a presets system, and embeds many 3rd party ui widgets.
-- [ofxImGuizmo](https://github.com/nariakiiwatani/ofxImGuizmo) The ImGuizmo extension shipped as an ofxAddon, for displaying a 3d point handle.
+- [nariakiiwatani/ofxImGuizmo](https://github.com/nariakiiwatani/ofxImGuizmo): The ImGuizmo extension shipped as an ofxAddon, for displaying a 3d point handle.
+- [daandelange/ofxImGuiAddonWidgets](https://github.com/daandelange/ofxImGuiAddonWidgets): A collection of widgets for various OpenFrameworks addons that don't natively support ofxImGui.
 
-#### ofxAddons providing ofxImGui integration
+#### ofxAddons providing native ofxImGui integration
 - [ofxBlend2D](https://github.com/Daandelange/ofxBlend2D)
 - [How to add support for my addon](./Developers.md#ofxImGui-integration-within-ofxAddons) ?
 

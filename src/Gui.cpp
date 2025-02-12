@@ -57,6 +57,11 @@ namespace ofxImGui
 
         // Note: ofGetWindowPtr() is not correct at this point in multi-window setups.
         // Cannot call ImGui::CreateContext here
+
+        // Fixme: This should be set false between CreateContext() and setup() !
+        // Disable tooltips until setup() is called, they may crash the app otherwise.
+        // ImGuiIO& io = ImGui::GetIO();
+        // io.ConfigErrorRecoveryEnableTooltip = false;
     }
 
 	//--------------------------------------------------------------
@@ -97,6 +102,9 @@ namespace ofxImGui
 			ofLogError("Gui::setup()") << "The provided ofAppBaseWindow pointer is null, cannot continue setup !";
 			return SetupState::Error;
         }
+
+        // Initial docking viewport
+        dockingViewport = ofRectangle(0, 0, _ofWindow->getWidth(), _ofWindow->getHeight());
 
 		// Grab existing ImGui Context
 		//ImGuiContext* existingImGuiContext = ImGui::GetCurrentContext(); // Null on first call ever
@@ -152,7 +160,9 @@ namespace ofxImGui
         ImGuiIO& io = ImGui::GetIO();
 
 		// Dummy call that will crash if the io is invalid --> ie for easier debugging
+#ifdef OFXIMGUI_DEBUG
 		(void)io;
+#endif
 
         // Note : In chaining mode, additional flags can still be set.
         io.ConfigFlags |= customFlags_;
@@ -370,6 +380,7 @@ namespace ofxImGui
 			return font;
 		}
 		else {
+			// delete font; // Nope, handled by ImGui !
 			return nullptr;
 		}
 	}
@@ -1333,9 +1344,9 @@ namespace ofxImGui
             // Get docking host window
             ImGuiWindow* window = ImGui::FindWindowByName(label);
             if(window){
-                // Like ImGui::DockSpaceOverViewport
-                static const std::string dockSpaceId = "DockSpace";
-                ImGuiID dockNodeID = ImGui::GetIDWithSeed(&*dockSpaceId.cbegin(), &*dockSpaceId.cend(), window->ID);
+                // Like ImGui::DockSpaceOverViewport, but within a non-current window
+                const char dockSpaceId[] = "DockSpace"; // ImGui version : ImGui::GetID("DockSpace");
+                ImGuiID dockNodeID = ImGui::GetIDWithSeed(dockSpaceId, nullptr, window->ID);
 
                 ImGuiDockNode* dockNode = ImGui::DockBuilderGetNode(dockNodeID);
 
