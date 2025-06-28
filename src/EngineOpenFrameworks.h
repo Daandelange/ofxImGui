@@ -80,14 +80,15 @@ namespace ofxImGui
         void onCharInput(uint32_t& _char);
 
         // Mouse events
+#ifndef OFXIMGUI_TOUCH_EVENTS
         void onMouseMoved(ofMouseEventArgs& event);
         void onMouseDragged(ofMouseEventArgs& event);
         void onMouseScrolled(ofMouseEventArgs& event);
         void onMouseButton(ofMouseEventArgs& event);
-#ifdef OFXIMGUI_TOUCH_EVENTS
+#else
 		void onTouchInput(ofTouchEventArgs & touch);
 		//void onTouchDown(ofTouchEventArgs & touch);
-		//void onTouchMoved(ofTouchEventArgs & touch);
+//		void onTouchMoved(ofTouchEventArgs & touch);
 		//void onTouchUp(ofTouchEventArgs & touch);
 		//void onTouchDoubleTap(ofTouchEventArgs & touch);
 		//void onTouchCancelled(ofTouchEventArgs & touch);

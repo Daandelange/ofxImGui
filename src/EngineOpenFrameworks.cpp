@@ -152,7 +152,7 @@ namespace ofxImGui
 			return ImGui_ImplOpenGL2_CreateFontsTexture();
 		}
 	}
-
+#ifndef OFXIMGUI_TOUCH_EVENTS
 	//--------------------------------------------------------------
 	void EngineOpenFrameworks::onMouseMoved(ofMouseEventArgs& event)
 	{
@@ -204,17 +204,18 @@ namespace ofxImGui
 		restoreImGuiContext();
 	}
 
-#ifdef OFXIMGUI_TOUCH_EVENTS
+#else
 	//--------------------------------------------------------------
 	void EngineOpenFrameworks::onTouchInput(ofTouchEventArgs& event)
 	{
 		// Set context
 		if(!setImGuiContext()) return;
-		
+
 		ImGuiIO& io = ImGui::GetIO();
 		io.AddMousePosEvent(event.x, event.y);
 		static bool isDown; isDown = (event.type == ofTouchEventArgs::down || event.type == ofTouchEventArgs::doubleTap);
 		switch(event.type){
+//            case ofTouchEventArgs::move: break;w
 			case ofTouchEventArgs::down :
 			case ofTouchEventArgs::cancel :
 			case ofTouchEventArgs::up :
@@ -392,14 +393,16 @@ namespace ofxImGui
 
 	//--------------------------------------------------------------
 	void EngineOpenFrameworks::registerListeners(){
-		// Mouse events
+        std::cout << "EngineOpenFrameworks::registerListeners\n";
+#ifndef OFXIMGUI_TOUCH_EVENTS
+        // Mouse events
 		ofAddListener(ofEvents().mouseMoved,    this, &EngineOpenFrameworks::onMouseMoved   );
 		ofAddListener(ofEvents().mouseDragged,  this, &EngineOpenFrameworks::onMouseDragged );
 		ofAddListener(ofEvents().mousePressed,  this, &EngineOpenFrameworks::onMouseButton  );
 		ofAddListener(ofEvents().mouseReleased, this, &EngineOpenFrameworks::onMouseButton  );
 		ofAddListener(ofEvents().mouseScrolled, this, &EngineOpenFrameworks::onMouseScrolled);
 		
-#ifdef OFXIMGUI_TOUCH_EVENTS
+#else
 		// TouchEvents
 //		ofAddListener(ofEvents().touchDoubleTap,this, &EngineOpenFrameworks::onTouchDoubleTap   );
 //		ofAddListener(ofEvents().touchMoved,    this, &EngineOpenFrameworks::onTouchMoved );
@@ -423,24 +426,25 @@ namespace ofxImGui
 #ifdef OFXIMGUI_TOUCH_EVENTS
 		// TouchEvents
 		//ofAddListener(ofEvents().touchDoubleTap,this, &EngineOpenFrameworks::onDeviceOrientationChanged);
-#endif
+#else
 		// Additional mouse data
 		ofAddListener(ofEvents().mouseEntered, this, &EngineOpenFrameworks::onMouseMoved);
 		ofAddListener(ofEvents().mouseExited , this, &EngineOpenFrameworks::onMouseMoved);
-
+#endif
 		// ImGui also has io.AddFocusEvent but OF hasn't got them.
 	}
 
 	//--------------------------------------------------------------
 	void EngineOpenFrameworks::unregisterListeners(){
 		// Mouse events
+#ifndef OFXIMGUI_TOUCH_EVENTS
 		ofRemoveListener(ofEvents().mouseMoved,     this, &EngineOpenFrameworks::onMouseMoved   );
 		ofRemoveListener(ofEvents().mouseDragged,   this, &EngineOpenFrameworks::onMouseDragged );
 		ofRemoveListener(ofEvents().mousePressed,   this, &EngineOpenFrameworks::onMouseButton  );
 		ofRemoveListener(ofEvents().mouseReleased,  this, &EngineOpenFrameworks::onMouseButton  );
 		ofRemoveListener(ofEvents().mouseScrolled,  this, &EngineOpenFrameworks::onMouseScrolled);
 		
-#ifdef OFXIMGUI_TOUCH_EVENTS
+#else
 		// TouchEvents
 //		ofRemoveListener(ofEvents().touchDoubleTap,this, &EngineOpenFrameworks::onTouchDoubleTap   );
 //		ofRemoveListener(ofEvents().touchMoved,    this, &EngineOpenFrameworks::onTouchMoved );
@@ -462,9 +466,11 @@ namespace ofxImGui
 		// Window Listeners
 		ofRemoveListener(ofEvents().windowResized,  this, &EngineOpenFrameworks::onWindowResized);
 
+#ifndef OFXIMGUI_TOUCH_EVENTS
 		// Additional mouse data
 		ofRemoveListener(ofEvents().mouseEntered, this, &EngineOpenFrameworks::onMouseMoved);
 		ofRemoveListener(ofEvents().mouseExited , this, &EngineOpenFrameworks::onMouseMoved);
+#endif
 	}
 }
 
