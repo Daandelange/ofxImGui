@@ -167,6 +167,11 @@ namespace ofxImGui
         // Note : In chaining mode, additional flags can still be set.
         io.ConfigFlags |= customFlags_;
 
+        // Inject touch flags by default on touch-only platforms
+#if defined(OFXIMGUI_TOUCH_EVENTS) && !defined(OFXIMGUI_TOUCH_EVENTS_AUTO_CONFIG)
+        io.ConfigFlags |= ImGuiConfigFlags_IsTouchScreen;
+#endif
+
 		// Already-setup window --> slaves exit early
 		if( !isContextOwned ) {
 #ifdef OFXIMGUI_DEBUG

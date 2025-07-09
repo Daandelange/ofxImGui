@@ -38,6 +38,14 @@
 	#define OFXIMGUI_COMPILER_MESSAGE(X)
 #endif
 
+// Touch events support ?
+// - - - - - - - - - - - - - - - -
+// Todo: add explicit compiler flag so devices such as Windows/Linux with TouchScreens can use it too ?
+#if defined(TARGET_OF_IOS) || defined(TARGET_OF_ANDROID)
+	#define OFXIMGUI_TOUCH_EVENTS
+	#define OFXIMGUI_FORCE_OF_BACKEND // Note: force it bcoz there will probably never be GLFW support on mobile devices ?
+#endif
+
 // Platform backend selection
 #if !defined(OFXIMGUI_FORCE_OF_BACKEND)
 
@@ -67,7 +75,7 @@
 
 // Default backend : openframeworks
 #ifndef OFXIMGUI_LOADED_BACKEND
-	OFXIMGUI_COMPILER_MESSAGE("ofxImGui is compiling with the default openFrameworks backend.")
+	OFXIMGUI_COMPILER_MESSAGE("ofxImGui is compiling with the non-default openFrameworks backend.")
 	#define OFXIMGUI_LOADED_BACKEND "OpenFrameworks"
 	#define OFXIMGUI_BACKEND_OPENFRAMEWORKS
 #endif
@@ -164,9 +172,4 @@
 // Prevent using this flag in code
 #undef OFXIMGUI_GLFW_FIX_MULTICONTEXT
 
-// Touch events support ?
-// - - - - - - - - - - - - - - - -
-// Todo: add explicit compiler flag so devices such as Windows/Linux with TouchScreens can use it too ?
-#if defined(TARGET_OF_IOS) || defined(TARGET_ANDROID)
-	#define OFXIMGUI_TOUCH_EVENTS
-#endif
+
