@@ -9,20 +9,30 @@ By setting them explicitly, you can enforce a specific way to meet your needs.
 
 An easy way to get started is to call the configuration assistant (see below) and interactively explore your options.
 
+## Backends 
 
-### GL context
+All ImGui APIs need to define a **platform and renderer backend**. The platform backend handles window initialisation and interactions with ImGui. The renderer backend handles rendering to the created surface(s). 
+
+### GL context / Renderer backend
+
+ofxImGui uses the native ImGui renderer backend. slightly modified version of the default 
 DearImGui needs to know your GL Context. ofxImGui tries to match your project's settings.  
 If your projects needs to force a specific GL configuration, you can set some native imgui compilation flags to match your project settings :
  - `IMGUI_IMPL_OPENGL_ES2` --> Use GLES2 (or GL ES 1.1 with some hacks).
  - `IMGUI_IMPL_OPENGL_ES3` --> Use GLES3.
  - `[none of the previous ones]` --> Use OpenGL.
 
-### Backend
-By default, ofxImGui uses the official ImGui GLFW backend when using `ofAppGLFWWindow`s. [More info](./PlatformSupport.md#backend-support-table).  
+### Platform Backend
+
+By default, ofxImGui uses the official ImGui GLFW backend when using `ofAppGLFWWindow`, this ensures full compatibility with any ImGui feature, and is interfaced directly with GLFW. The OpenFrameworks engine is customly interfaced to OF and implements minimal ImGui support. [More info](./PlatformSupport.md#backend-support-table).
+
+Most supported OpenFrameworks build targets rely on GLFW (personal computer targets), with the exception of mobile targets (which use their respective platform windowing library), or linux builds without desktop environments (GLUT windows).
+
 You may force to use the openframeworks backend by defining :
  - `OFXIMGUI_FORCE_OF_BACKEND`
 
-### GLFW backend options
+#### GLFW backend options
+
 You may also override some automatic macro defines (not recommended, there are drawbacks, but it might solve some very specific use cases):
 
 - `IMGUI_GLFW_INJECT_MULTICONTEXT_SUPPORT=0` to disable imgui_impl_glfw changes to support multiple context.  
@@ -34,15 +44,22 @@ You may also override some automatic macro defines (not recommended, there are d
      Event propagation: `GLFW -> ofxImGui -> (ImGui + OpenFrameworks)`.
 
 ### Configuration assistant
+
 To have an insight on how your ofxImGui interfaces ImGui, you can call `gui.drawOfxImGuiDebugWindow();` together with `OFXIMGUI_DEBUG`. It contains an assistant that provides an explanation of your current configuration. It also provides some suggestions for gradually improving your configuration (to get the most out of OF+ImGui).
 
 - - - -
 
 # Update GLFW 
 
-If you use the GLFW backend (enabled by default), the [GLFW version that ships with oF or your distro](./PlatformSupport.md#Glfw-version) is probably not too recent. In order to enable more native mouse cursors, and possibly other interface polishings, you can update GLFW within your oF installation.  
+If you use the GLFW backend (enabled by default), the [GLFW version that ships with oF or your distro](./PlatformSupport.md#Glfw-version) is probably not too recent. In order to enable more native mouse cursors, and possibly other interface polishings, you can update GLFW within your oF installation.
+
+Only GLFW 3.4+ supports all ImGui features. Versions below gradually disable some small UI features making ImGui slightly less pretty.  
+**Follow this step only if you have OF < v_0.12.1 which already ships with GLFW 3.4.**
+
+Also note that GLFW 3.4 brings better window-resizing (no black window while resizing) to all your ofApps !
 
 #### On Windows and MacOs
+
 **Warning**: BigSur and above used to break glfw-updates, probably the reason why OF didn't ship with more recent versions. Proceed with caution !
 ````bash
 # Instructions for Mac/Win
@@ -63,6 +80,7 @@ git clone https://github.com/openframeworks/apothecary.git
 ````  
 
 #### On Linux
+
 ````bash
 # Instructions for rpi distros and Linux desktops
 # Raspbian <= Buster don't have GLFW 3.3 in their repos, but you can try.
@@ -71,10 +89,14 @@ apt update && apt upgrade libglfw3 libglfw3-dev
 apt-cache show libglfw3-dev
 ````  
 _This should also enable gamepad support on RPI with Raspbian <= Buster which ships with GLFW <= 3.2.1._  
-_Raspbian Note : Packages are known to be a little outdated, the easiest way is to upgrade your distro to the latest version. At the time of OF_v0.11.0, Raspbian shipped with GLFW 3.2 for example._
+_Raspbian Note : Packages are known to be a little outdated, the easiest way is to upgrade your distro to use the latest version. At the time of OF_v0.11.0, Raspbian shipped with GLFW 3.2 for example._
 
-#### After the update
-Modify ofxImGui: [revert `3310` to `3300`](https://github.com/ocornut/imgui/blob/dd4ca70b0d612038edadcf37bf601c0f21206d28/backends/imgui_impl_glfw.cpp#L62) to tell imgui to use more precise cursors.
+Note: On Linux, your app won't run if an older GLFW version is installed on the distro.
+
+#### After the GLFW update
+
+Define `OFXIMGUI_GLFW_NO_VERSION_HACKS` to tell ofxImGui to force-use more precise cursors & more.
+
 
 - - - -
 
