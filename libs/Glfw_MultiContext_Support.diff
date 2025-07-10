@@ -1,5 +1,5 @@
 diff --git a/./imgui_git/backends/imgui_impl_glfw.cpp b/./imgui/backends/imgui_impl_glfw.cpp
-index a3d5454..7edfb52 100644
+index a3d5454..1024235 100644
 --- a/./imgui_git/backends/imgui_impl_glfw.cpp
 +++ b/./imgui/backends/imgui_impl_glfw.cpp
 @@ -1,3 +1,8 @@
@@ -24,7 +24,7 @@ index a3d5454..7edfb52 100644
  #define GLFW_HAS_FOCUS_WINDOW           (GLFW_VERSION_COMBINED >= 3200) // 3.2+ glfwFocusWindow
  #define GLFW_HAS_FOCUS_ON_SHOW          (GLFW_VERSION_COMBINED >= 3300) // 3.3+ GLFW_FOCUS_ON_SHOW
 +#if defined(TARGET_OSX) || defined(TARGET_WIN32) // BEGIN CUSTOM OFXIMGUI LINES
-+#define GLFW_HAS_MONITOR_WORK_AREA      (GLFW_VERSION_COMBINED >= 3301) // 3.3+ glfwGetMonitorWorkarea
++#define GLFW_HAS_MONITOR_WORK_AREA      (GLFW_VERSION_COMBINED >= OFXIMGUI_VERSION_GLFW_3300) // 3.3+ glfwGetMonitorWorkarea
 +#else
  #define GLFW_HAS_MONITOR_WORK_AREA      (GLFW_VERSION_COMBINED >= 3300) // 3.3+ glfwGetMonitorWorkarea
 +#endif // END CUSTOM OFXIMGUI LINES
