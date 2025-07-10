@@ -100,8 +100,33 @@ void ofApp::draw(){
     
     ImGui::Spacing();
     ImGui::CollapsingHeader("Default font", ImGuiTreeNodeFlags_Leaf);
+    ImGuiIO& io = ImGui::GetIO();
+    // Refer to imgui_internal GetDefaultFont()
+    ImGui::Text("Default font: %s", io.FontDefault==nullptr?"[None]":io.FontDefault->GetDebugName());
+    if(io.FontDefault==nullptr){
+        ImGui::SameLine();
+        ImGui::TextDisabled(" (uses first font)");
+    }
     // Uses the default font
+    ImGui::Text("Sample text: ");
+    ImGui::SameLine();
     ImGui::Text("Hello, world!");
+    ImGui::Dummy(ImVec2(0,10));
+
+    static unsigned int mScale = 2;
+    if(io.FontDefault){
+        if(ImGui::InputScalar("Text scale", ImGuiDataType_U32, &mScale)){
+            if(mScale <= 0) mScale = 1; // Never use 0 scale !
+        }
+        ImGui::Text("Scaled text: ");
+        ImGui::SameLine();
+        ImGui::PushFont(io.FontDefault, io.FontDefault->LegacySize*mScale);
+        ImGui::Text("Hello, world!");
+        ImGui::PopFont();
+    }
+    ImGui::TextDisabled("Since ImGui 1.92.0 you can scale fonts on the fly !");
+    ImGui::TextDisabled("They will be automatically rasterized.");
+    ImGui::Dummy(ImVec2(0,10));
     ImGui::Spacing();
 
     // Use 2ndary font
@@ -113,7 +138,7 @@ void ofApp::draw(){
     ImGui::TextColored(ImVec4(255,255,255,0.5), "<-- one character is not loaded in this font !");
 
     // Custom font has more caracters, allowing to render them all
-    ImGui::PushFont(customFont);
+    ImGui::PushFont(customFont, customFont->LegacySize);
     ImGui::Text(u8"Witaj świecie !");
     ImGui::SameLine();
     ImGui::TextColored(ImVec4(255,255,255,0.5), "<-- with another font, it's rendered correctly !");
@@ -123,7 +148,7 @@ void ofApp::draw(){
 
     // Fontawesome
     ImGui::CollapsingHeader("Fontawesome icons", ImGuiTreeNodeFlags_Leaf);
-    ImGui::PushFont(customFont);
+    ImGui::PushFont(customFont, customFont->LegacySize);
     ImGui::Text("FontAweome is loaded too ! %s", ICON_FA_THUMBS_UP);
     ImGui::TextWrapped("The glyphs are merged into another one, allowing mix text and " ICON_FA_IMAGES " without changing font.");
     ImGui::Button( ICON_FA_TRASH_ALT " Trash it !");
@@ -133,13 +158,13 @@ void ofApp::draw(){
     ImGui::Button( ICON_FA_BELL " Ring it !");
     ImGui::PopFont();
     if(useBigFaIcons){
-        ImGui::TextDisabled("Icons are loaded bigger on purpose.");
+        ImGui::TextDisabled("Icons are loaded bigger on purpose for demonstrating loader options.");
     }
     ImGui::TextDisabled("Note: the embedded icon set is NOT complete.");
     ImGui::Dummy(ImVec2(0,10));
 
     // ProggyTiny font
-    ImGui::PushFont(proggyFont);
+    ImGui::PushFont(proggyFont, proggyFont->LegacySize);
     ImGui::CollapsingHeader("ProggyTiny font", ImGuiTreeNodeFlags_Leaf);
     ImGui::Text("This text is rendered with ProggyTiny.");
     ImGui::Text("The font has been loaded from the program binary.");
@@ -159,17 +184,6 @@ void ofApp::draw(){
         ImGui::InputText("Custom string", &customString);
         ImGui::DebugTextEncoding(customString.c_str());
         ImGui::TreePop();
-    }
-    ImGui::Dummy(ImVec2(0,10));
-
-    // Default font
-    ImGui::CollapsingHeader("Default font", ImGuiTreeNodeFlags_Leaf);
-    ImGuiIO& io = ImGui::GetIO();
-    // Refer to imgui_internal GetDefaultFont()
-    ImGui::Text("Default font: %s", io.FontDefault==nullptr?"[None]":io.FontDefault->GetDebugName());
-    if(io.FontDefault==nullptr){
-        ImGui::SameLine();
-        ImGui::TextDisabled(" (uses first font)");
     }
     ImGui::Dummy(ImVec2(0,10));
 

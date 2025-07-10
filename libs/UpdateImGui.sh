@@ -25,8 +25,9 @@ VERSION_1_90_9=3369cbd2 # 1.90.9
 VERSION_1_91_0=139e99ca # 1.91.0
 VERSION_1_91_5=368123a # 1.91.5
 VERSION_1_91_9b=4806a19 # 1.91.5
-VERSION_1_92_0=adfa536 # 1.92.0
-VERSION_SHA=$VERSION_1_91_9b
+VERSION_1_92_0=adfa536 # 1.92.0 - Warning : broken font atlas / text rendering issues !
+VERSION_1_92_1=44aa9a4 # 1.92.1
+VERSION_SHA=$VERSION_1_92_1
 # ------------------
 
 echo "\nHello,"

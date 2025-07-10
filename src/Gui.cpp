@@ -424,6 +424,9 @@ namespace ofxImGui
 
 	//--------------------------------------------------------------
 	bool Gui::rebuildFontsTexture(){
+#if IMGUI_VERSION_NUM >= 19200
+		return true; // not needed anymore = done !
+#else
 		if(context==nullptr){
 		  ofLogWarning("Gui::rebuildFontsTexture()") << "You must build fonts after gui.setup() ! (ignoring this call)";
 		  return false;
@@ -433,12 +436,11 @@ namespace ofxImGui
 		ImGuiIO& io = ImGui::GetIO();
 
 		if (io.Fonts->Fonts.size() > 0) {
-#if IMGUI_VERSION_NUM < 19200
 			io.Fonts->Build();
-#endif
 			return context->engine.updateFontsTexture();
 		}
 		return false;
+#endif
 	}
 
 	//--------------------------------------------------------------
