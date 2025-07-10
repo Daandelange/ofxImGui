@@ -87,7 +87,7 @@ On OSX, updating GLFW will also show the (cached) window content while resizing 
 | 0.11.2         | pre-3.3.0    | [Link](https://github.com/openframeworks/apothecary/pull/197) |
 | 0.11.2_master  | 3.3.7        | [Link](https://github.com/openframeworks/apothecary/pull/225) | 
 | 0.12.0         | 3.3.8        | [Link](https://github.com/openframeworks/apothecary/commit/bdc421bd28e8b433747759154f29a206d7cc9e41) |
-| 0.12.x         | 3.4          | [Link](https://github.com/openframeworks/apothecary/commit/27b80288fc0e83ebad475b9ee94d042319bf0e3c) |
+| 0.12.1         | 3.4          | [Link](https://github.com/openframeworks/apothecary/blob/fae96e615875a701d48dc29cf4a3be24bc472a07/apothecary/formulas/glfw.sh#L13) |
 
 ImGui restrictions by GLFW version. [Source](https://github.com/ocornut/imgui/blob/v1.91.0-docking/backends/imgui_impl_glfw.cpp#L118-L145).  
 

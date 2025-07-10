@@ -196,7 +196,8 @@ namespace ofxImGui
 		// For now we ensure a default font is always available, for the ease of use.
 		ImFont* defaultFont = nullptr;
 		if(io.Fonts->Fonts.size()==0){
-		   defaultFont = io.Fonts->AddFontDefault();
+#ifndef IMGUI_DISABLE_DEFAULT_FONT
+			defaultFont = io.Fonts->AddFontDefault();
 
             // Set as default
             if(defaultFont){
@@ -208,6 +209,9 @@ namespace ofxImGui
                     setDefaultFont(defaultFont);
                 }
             }
+#else
+            IM_ASSERT("No font is not set and the default ImGui font has been disabled !");
+#endif
         }
 
 		// Load a theme
@@ -429,7 +433,9 @@ namespace ofxImGui
 		ImGuiIO& io = ImGui::GetIO();
 
 		if (io.Fonts->Fonts.size() > 0) {
+#if IMGUI_VERSION_NUM < 19200
 			io.Fonts->Build();
+#endif
 			return context->engine.updateFontsTexture();
 		}
 		return false;
@@ -545,9 +551,11 @@ namespace ofxImGui
 
 		ImGui::SetCurrentContext(context->imguiContext);
 
+#if IMGUI_VERSION_NUM < 19190
         // Help people loading fonts incorrectly
         ImGuiIO& io = ImGui::GetIO();
         IM_ASSERT( io.Fonts->IsBuilt() );
+#endif
 
         //std::cout << "New Frame in context " << context << " in window " << ofGetWindowPtr() << " (" << ofGetWindowPtr()->getWindowSize().x << ")" << std::endl;
 		context->engine.newFrame();
@@ -1079,13 +1087,29 @@ namespace ofxImGui
 						ImGui::Text("Display scale: %.3f x %.3f", io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
 						ImGui::Text("Ini filename : %s", io.IniFilename);
 						ImGui::Text("Loaded Fonts : %i", io.Fonts->Fonts.size());
+#if IMGUI_VERSION_NUM < 19190
 						for(auto& font : io.Fonts->Fonts){
 							ImGui::BulletText("%s", font->ConfigData->Name);
+
                             if(font == io.FontDefault){
                                 ImGui::SameLine();
                                 ImGui::TextDisabled("Default");
                             }
 						}
+#else
+						for(auto& font : io.Fonts->Fonts){
+							ImGui::BulletText("%s", font->GetDebugName());
+
+                            if(font == io.FontDefault){
+                                ImGui::SameLine();
+                                ImGui::TextDisabled("Default");
+                            }
+                        }
+                        ImGui::Text("Loaded Fonts Sources : %i", io.Fonts->Sources.size());
+                        for(auto& fontSource : io.Fonts->Sources){
+                            ImGui::BulletText("%s [size=%.0f]", fontSource.Name, fontSource.SizePixels);
+                        }
+#endif
 						ImGui::TextWrapped("");
 
 						// Backend Flags

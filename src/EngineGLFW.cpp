@@ -191,12 +191,16 @@ namespace ofxImGui
 
 	//--------------------------------------------------------------
     bool EngineGLFW::updateFontsTexture(){
+#if IMGUI_VERSION_NUM < 19200
         if (ofIsGLProgrammableRenderer()) {
             return ImGui_ImplOpenGL3_CreateFontsTexture();
         }
         else {
             return ImGui_ImplOpenGL2_CreateFontsTexture();
         }
+#else
+        return true;
+#endif
     }
 
 	//--------------------------------------------------------------

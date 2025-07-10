@@ -9,6 +9,8 @@
 // Implemented features:
 //  [X] Renderer: User texture binding. Use 'GLuint' OpenGL texture identifier as void*/ImTextureID. Read the FAQ about ImTextureID!
 //  [X] Renderer: Multi-viewport support (multiple windows). Enable with 'io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable'.
+// Missing features or Issues:
+//  [ ] Renderer: Large meshes support (64k+ vertices) even with 16-bit indices (ImGuiBackendFlags_RendererHasVtxOffset).
 
 // You can use unmodified imgui_impl_* files in your project. See examples/ folder for examples of using this.
 // Prefer including the entire imgui/ repository into your project (either as a copy or as a submodule), and only build the backends you need.
@@ -28,7 +30,7 @@
 
 // CHANGELOG
 // (minor and older changes stripped away, please see git history for details)
-//  2024-XX-XX: Platform: Added support for multiple windows via the ImGuiPlatformIO interface.
+//  2025-XX-XX: Platform: Added support for multiple windows via the ImGuiPlatformIO interface.
 //  2024-10-07: OpenGL: Changed default texture sampler to Clamp instead of Repeat/Wrap.
 //  2024-06-28: OpenGL: ImGui_ImplOpenGL2_NewFrame() recreates font texture if it has been destroyed by ImGui_ImplOpenGL2_DestroyFontsTexture(). (#7748)
 //  2022-10-11: Using 'nullptr' instead of 'NULL' as per our switch to C++11.
@@ -81,6 +83,16 @@
 #endif
 #endif // CUSTOM OFXIMGUI ADDED LINE
 
+// [Debugging]
+//#define IMGUI_IMPL_OPENGL_DEBUG
+#ifdef IMGUI_IMPL_OPENGL_DEBUG
+#include <stdio.h>
+#define GL_CALL(_CALL)      do { _CALL; GLenum gl_err = glGetError(); if (gl_err != 0) fprintf(stderr, "GL error 0x%x returned from '%s'.\n", gl_err, #_CALL); } while (0)  // Call with error check
+#else
+#define GL_CALL(_CALL)      _CALL   // Call without error check
+#endif
+
+// OpenGL data
 struct ImGui_ImplOpenGL2_Data
 {
     GLuint       FontTexture;
@@ -176,7 +188,7 @@ static void ImGui_ImplOpenGL2_SetupRenderState(ImDrawData* draw_data, int fb_wid
 
     // Setup viewport, orthographic projection matrix
     // Our visible imgui space lies from draw_data->DisplayPos (top left) to draw_data->DisplayPos+data_data->DisplaySize (bottom right). DisplayPos is (0,0) for single viewport apps.
-    glViewport(0, 0, (GLsizei)fb_width, (GLsizei)fb_height);
+    GL_CALL(glViewport(0, 0, (GLsizei)fb_width, (GLsizei)fb_height));
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
@@ -287,13 +299,8 @@ bool ImGui_ImplOpenGL2_CreateFontsTexture()
     glBindTexture(GL_TEXTURE_2D, bd->FontTexture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-#ifdef TARGET_OPENGLES
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-#else
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-#endif
     glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
