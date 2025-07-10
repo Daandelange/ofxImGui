@@ -65,6 +65,31 @@ inline void ImGui_ImplGlfw_RemoveWindowContext(GLFWwindow* window){
 // - ImGui_ImplGlfw_UpdateKeyModifiers ?
 // - ImGui_ImplGlfw_MonitorCallback ?
 
+// Handle GLFW capabilities hack for OF using in-between GLFW version (non-realease, master branch)
+// Corrects the IMGUI detection to the features that the OF version has.
+// More info in Developers.md
+#define GLFW_RESIZE_NESW_CURSOR
+#define GLFW_MOUSE_PASSTHROUGH
+#if OF_VERSION_MAJOR == 0
+#	if OF_VERSION_MINOR == 11
+#		if OF_VERSION_PATCH == 0 // 0.11.0 has GLFW pre-3.3.0
+#			define OFXIMGUI_VERSION_GLFW_3300 3301
+#		elseif OF_VERSION_PATCH == 1 // 0.11.1 has GLFW 3.3.0
+#		elseif OF_VERSION_PATCH == 2 // 0.11.2 has GLFW pre-3.3.0
+#			define OFXIMGUI_VERSION_GLFW_3300 3301
+#		endif
+#	elseif OF_VERSION_MINOR == 12
+#		if OF_VERSION_PATCH == 0 // 0.12.0 has GLFW 3.3.8
+#		elseif OF_VERSION_PATCH == 1 // 0.12.0 has GLFW 3.4
+#		endif
+#	endif
+#endif
+
+// Default value
+#ifndef OFXIMGUI_VERSION_GLFW_3300
+#	define OFXIMGUI_VERSION_GLFW_3300 3300
+#endif
+
 #else
 // Define classes, compiler should strip all in optimisation steps as it's just dummy code.
 class GLFWwindow;

@@ -54,7 +54,7 @@ Versions are tagged in the git repo.
 
 | ofxImGui version  | ImGui version | Tested oF version |
 |------------------:|---------------|-------------------|
-| ofxImGui 1.91.0   | 1.91.0*       | 0.11 -> 0.12.0 |
+| ofxImGui 1.91.0   | 1.91.0*       | 0.11 -> 0.12.1 |
 | ofxImGui 1.90.0   | 1.90.0*       | 0.11 -> 0.12.0 |
 | ofxImGui 1.89.2   | 1.89.2*       | 0.11 -> 0.11.2 |
 | ofxImGui 1.82     | 1.82*         | 0.11 -> 0.11.2 |

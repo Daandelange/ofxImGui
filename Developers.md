@@ -79,17 +79,17 @@ Related issues:
  - [Nesting multiple imgui contexts (glfw+opengl3)](https://github.com/ocornut/imgui/issues/2004)
 
 - 2. *Add GL ES 1 support so that it compiles on Rpis :*  in `imgui_impl_opengl2.cpp`
-````cpp
+  ````cpp
 // --- CUSTOM MODIFICATION
 // Rpi dirty fix : Add support for GLES 1.1, used by the imgui fixed pipeline.
 #elif defined(TARGET_RASPBERRY_PI) && defined(TARGET_OPENGLES) // && defined(IMGUI_IMPL_OPENGL_ES1)
 #include "gles1CompatibilityHacks.h"
 // --- END CUSTOM MODIFICATION
-````
+  ````
 - 3. *GLFW compatibility* :  
   Between oF 0.11.0 and oF 0.12.1, GLFW versions have been changing a lot. Refer to [./Configure.md#Glfw-version].
   *Note:* **oF 0.11.0 uses GLFW pre-3.3.0**; this causes the imgui glfw backend to use an unavailable function. Until oF's GLFW library gets updated (0.12.0), `imgui_impl_glfw.cpp` will need to be modified in order to work with ofxImGui.
-  - The raspberry pi might have an old GLFW implementation, please add these lines in `imgui_impl_glfw.cpp` to ensure cross platform compatibility.  
+  - The raspberry pi might have an old GLFW implementation, please add these lines in `imgui_impl_glfw.cpp` to ensure cross platform compatibility.
   ````cpp
 // Custom modification : Add support for older GLFW versions (<3.2) (on Rpi Stretch for example)
 #include "glfwCompatibilityHacks.h"
