@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include "ofConstants.h"
 #include "ofxImGuiConstants.h"
 
 
@@ -209,7 +210,9 @@ constexpr float ofColorScale = 1.0f/255.0f;
 #define IM_VEC2_CLASS_EXTRA_OF_10 // empty
 #endif
 
-#define IM_VEC2_CLASS_EXTRA IM_VEC2_CLASS_EXTRA_OF_9 IM_VEC2_CLASS_EXTRA_OF_10
+#define IM_VEC2_CLASS_EXTRA \
+    IM_VEC2_CLASS_EXTRA_OF_9 \
+    IM_VEC2_CLASS_EXTRA_OF_10
 
 // Todo: Add ofVec3 -> ImVec4 (assuming alpha=100%) ??? (works for colors, maybe not rectangles....
 #define IM_VEC4_CLASS_EXTRA_OF_9 \
@@ -230,7 +233,9 @@ constexpr float ofColorScale = 1.0f/255.0f;
 #else
 #define IM_VEC4_CLASS_EXTRA_OF_10 // empty
 #endif
-#define IM_VEC4_CLASS_EXTRA IM_VEC4_CLASS_EXTRA_OF_9 IM_VEC4_CLASS_EXTRA_OF_10
+#define IM_VEC4_CLASS_EXTRA \
+    IM_VEC4_CLASS_EXTRA_OF_9 \
+    IM_VEC4_CLASS_EXTRA_OF_10
 
 
 #define ImDrawIdx ofIndexType

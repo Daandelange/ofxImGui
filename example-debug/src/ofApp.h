@@ -628,7 +628,7 @@ class ofApp : public ofBaseApp {
                         ImVec2 ofScreenSize = ImVec2(ofGetScreenWidth(), ofGetScreenHeight());
                         windowsZone.y = windowsZone.x*(ofScreenSize.y/ofScreenSize.x);// Fit height proportionally to screen
                         ImVec2 drawScale = windowsZone / ofScreenSize;
-                        ImVec2 ofWindowPos = ofGetWindowRect().getMin();
+                        ImVec2 ofWindowPos = ofGetCurrentWindow()->getWindowPosition();
                         ImVec2 ofWindowSize( ofGetWindowWidth(), ofGetWindowHeight() );
                         ImVec2 bestWindowPos = ofWindowPos;
 

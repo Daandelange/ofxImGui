@@ -197,11 +197,16 @@ namespace ofxImGui
 		ImFont* defaultFont = nullptr;
 		if(io.Fonts->Fonts.size()==0){
 #ifndef IMGUI_DISABLE_DEFAULT_FONT
-			defaultFont = io.Fonts->AddFontDefault();
+			//defaultFont = io.Fonts->AddFontDefault();
+			ImFontConfig cfg;
+			cfg.SizePixels = 13.0f;
+			defaultFont = io.Fonts->AddFontDefault(&cfg);
 
             // Set as default
             if(defaultFont){
+#if IMGUI_VERSION_NUM < 1920
                 rebuildFontsTexture(); // Fixme: could be an optional call to improve loading speeds (only needs to be called once after loading all fonts).
+#endif
 
                 // Ensure the default font is marked default (can be user-overridden later)
                 if(!io.FontDefault){
@@ -377,21 +382,22 @@ namespace ofxImGui
 		ImGuiIO& io = ImGui::GetIO();
         std::string filePath = ofFilePath::getAbsolutePath(fontPath);
 
-
         ImFont* font = io.Fonts->AddFontFromFileTTF(filePath.c_str(), fontSize, _fontConfig, _glyphRanges);
 
 		if (font != nullptr){
-			 // Fixme: could be an optional call to improve loading speeds (only needs to be called once after loading all fonts).
-			 rebuildFontsTexture();
+#if IMGUI_VERSION_NUM < 1920
+			// Fixme: could be an optional call to improve loading speeds (only needs to be called once after loading all fonts).
+			rebuildFontsTexture();
+#endif
 
 			if(_setAsDefaultFont) setDefaultFont(font);
 
 			return font;
 		}
-		else {
-			// delete font; // Nope, handled by ImGui !
-			return nullptr;
-		}
+
+		// delete font; // Nope, handled by ImGui !
+
+		return nullptr;
 	}
 	//--------------------------------------------------------------
 	ImFont* Gui::addFontFromMemory(void* fontData, int fontDataSize, float fontSize, const ImFontConfig* _fontConfig, const ImWchar* _glyphRanges, bool _setAsDefaultFont ) {
@@ -412,8 +418,10 @@ namespace ofxImGui
 		ImFont* font = io.Fonts->AddFontFromMemoryTTF( fontData, fontDataSize, fontSize, _fontConfig, _glyphRanges);
 
 		if (font != nullptr){
+#if IMGUI_VERSION_NUM < 1920
 			// Fixme: could be an optional call to improve loading speeds (only needs to be called once after loading all fonts).
 			rebuildFontsTexture();
+#endif
 			if(_setAsDefaultFont) setDefaultFont(font);
 			return font;
 		}
@@ -556,7 +564,8 @@ namespace ofxImGui
 #if IMGUI_VERSION_NUM < 19190
         // Help people loading fonts incorrectly
         ImGuiIO& io = ImGui::GetIO();
-        IM_ASSERT( io.Fonts->IsBuilt() );
+        IM_ASSERT( io.Fonts->IsBuilt() ); // Fonts incorrectly setup
+        //IM_ASSERT( io.Fonts->Fonts.Size > 0 && io.Fonts->TexIsBuilt); // Fonts incorrectly setup
 #endif
 
         //std::cout << "New Frame in context " << context << " in window " << ofGetWindowPtr() << " (" << ofGetWindowPtr()->getWindowSize().x << ")" << std::endl;

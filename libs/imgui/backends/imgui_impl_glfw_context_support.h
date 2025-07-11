@@ -75,13 +75,13 @@ inline void ImGui_ImplGlfw_RemoveWindowContext(GLFWwindow* window){
 #	if OF_VERSION_MINOR == 11
 #		if OF_VERSION_PATCH == 0 // 0.11.0 has GLFW pre-3.3.0
 #			define OFXIMGUI_VERSION_GLFW_3300 3301
-#		elseif OF_VERSION_PATCH == 1 // 0.11.1 has GLFW 3.3.0
-#		elseif OF_VERSION_PATCH == 2 // 0.11.2 has GLFW pre-3.3.0
+#		elif OF_VERSION_PATCH == 1 // 0.11.1 has GLFW 3.3.0
+#		elif OF_VERSION_PATCH == 2 // 0.11.2 has GLFW pre-3.3.0
 #			define OFXIMGUI_VERSION_GLFW_3300 3301
 #		endif
-#	elseif OF_VERSION_MINOR == 12
+#	elif OF_VERSION_MINOR == 12
 #		if OF_VERSION_PATCH == 0 // 0.12.0 has GLFW 3.3.8
-#		elseif OF_VERSION_PATCH == 1 // 0.12.0 has GLFW 3.4
+#		elif OF_VERSION_PATCH == 1 // 0.12.0 has GLFW 3.4
 #		endif
 #	endif
 #endif

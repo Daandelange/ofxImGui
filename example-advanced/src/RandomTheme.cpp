@@ -1,8 +1,13 @@
 #include "RandomTheme.h"
+#include "ofColor.h"
+#include "ofMath.h"
 
-ofColor getRandomColor()
-{
-    return ofColor(ofRandom(0, 255), ofRandom(0, 255), ofRandom(0, 255), 255);    
+// Needed for more extended ImVec4 constructors
+#define IMGUI_DEFINE_MATH_OPERATORS
+#include "imgui.h"
+
+ofColor getRandomColor(){
+    return ofColor(ofRandom(0, 255), ofRandom(0, 255), ofRandom(0, 255), 255);
 }
 
 void RandomTheme::setup()
