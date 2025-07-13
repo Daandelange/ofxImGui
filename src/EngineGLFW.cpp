@@ -163,6 +163,11 @@ namespace ofxImGui
     void EngineGLFW::render()
 	{
 
+		// Ensure GL is in a compatible state
+		// Note: required for ofApps that use ofTexture which can set/leave this to a different value.
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+		glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+
         if (ofIsGLProgrammableRenderer()) {
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         }

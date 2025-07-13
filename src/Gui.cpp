@@ -259,7 +259,7 @@ namespace ofxImGui
             if(loadedTextures[i])
             {
                 delete loadedTextures[i];
-                loadedTextures[i] = NULL;
+                loadedTextures[i] = nullptr;
             }
 		}
 		loadedTextures.clear();
@@ -499,6 +499,7 @@ namespace ofxImGui
 	//--------------------------------------------------------------
 	GLuint Gui::loadImage(ofImage& image)
 	{
+		// Note: illegal : loads pixels to texture, and texture is never kept ?!
 		return loadPixels(image.getPixels());
 	}
 
@@ -511,10 +512,17 @@ namespace ofxImGui
 	//--------------------------------------------------------------
 	GLuint Gui::loadTexture(const std::string& imagePath)
 	{
-		ofDisableArbTex();
+		const bool isUsingArb = ofGetUsingArbTex();
+		if (isUsingArb)
+		{
+			ofDisableArbTex();
+		}
 		ofTexture* texture = new ofTexture();
 		ofLoadImage(*texture, imagePath);
-		ofEnableArbTex();
+		if (isUsingArb)
+		{
+			ofEnableArbTex();
+		}
 		loadedTextures.push_back(texture);
 		return texture->getTextureData().textureID;
 	}
@@ -522,7 +530,7 @@ namespace ofxImGui
 	//--------------------------------------------------------------
 	GLuint Gui::loadTexture(ofTexture& texture, const std::string& imagePath)
 	{
-		bool isUsingArb = ofGetUsingArbTex();
+		const bool isUsingArb = ofGetUsingArbTex();
 		if (isUsingArb)
 		{
 			ofDisableArbTex();

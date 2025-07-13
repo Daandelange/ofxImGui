@@ -128,8 +128,10 @@ namespace ofxImGui
 	{
 		// Need to set context here too ?
 
-		// Flush imgui pipeline
-		ImGui::Render();
+		// Ensure GL is in a compatible state
+		// Note: required for ofApps that use ofTexture which can set/leave this to a different value.
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+		glPixelStorei(GL_UNPACK_ALIGNMENT,1);
 
 		// Draw !
 		if (ofIsGLProgrammableRenderer()){

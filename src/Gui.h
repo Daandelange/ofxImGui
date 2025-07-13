@@ -47,6 +47,7 @@
 // Todo: Maybe we could move setup() to main.cpp, or bind it to an ofxImGuiWindow
 // This could clarify the setup process by explicitly giving is the window handle.
 
+// Todo: Better texture examples / integration (provide an ofxImGuiTexture: an ofTexture force-disabled arbtex?, obsolete loadPixel/loadImage/loadTexture legacy methods : some have memory leaks ?)
 
 namespace ofxImGui {
 	class Gui;
@@ -161,6 +162,8 @@ namespace ofxImGui
 
 		void setTheme(BaseTheme* theme);
 
+		// Prefer storing your own textures and forwarding textureids !
+		// Provided for legacy compatibility and ensure textures are in the correct format
 		GLuint loadImage(ofImage& image);
 		GLuint loadImage(const std::string& imagePath);
 
@@ -197,9 +200,9 @@ namespace ofxImGui
 //#endif
 		ofEventListener autoDrawListener;
 
-		BaseTheme* theme=nullptr; // Todo: move this into ofxImguiContext ?
+		BaseTheme* theme=nullptr; // Todo: move this into ofxImguiContext ? Singleton this ??
 
-		std::vector<ofTexture*> loadedTextures;
+		std::vector<ofTexture*> loadedTextures; // Textures owned by ofxImGui. Fixme: no multi-instance support, singleton this ! shared_ptr ??
 
 		ofRectangle dockingViewport;
 		int menuHeight;
