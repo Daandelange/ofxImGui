@@ -2,18 +2,46 @@
 # Changelog
 
 _Note: This document is focused on ofxImGui. For detailed ImGui API changes and new features, please refer to the [ImGui changelog](https://github.com/ocornut/imgui/blob/v1.91.0-docking/docs/CHANGELOG.txt)._  
-_Tip: For compile-time depreciation hinting on your code, uncomment `IMGUI_DISABLE_OBSOLETE_FUNCTIONS` in `imconfig.h`. If you do this regurarly, it's quite easy to keep up with the occasional ImGui breaking API changes._  
+_Tip: For compile-time depreciation hinting on your code, uncomment `IMGUI_DISABLE_OBSOLETE_FUNCTIONS` in `imconfig.h`. If you do this regurarly, it's quite easy to keep up with the occasional ImGui breaking API changes._ 
+
+This document is a summary. You can find more information by looking at the respective commits. The commit messages are usually well detailed and otherwise you can always refer to the corresponding code changes. 
+
+Git [commit tags](https://github.com/jvcleave/ofxImGui/tags) :
+ - The latest commit with a specific ImGui version is tagged `imgui_X.XX.X`.
+ - ofxImGui versions are tagged `X.XX.X`.
 
 - - - -
 
-# ofxImGui 1.91.0
-- Lots of new documentation.
+# ofxImGui 1.92.x (develop)
+
+- Feature: New compiler flag to disable glfw version hacks `OFXIMGUI_GLFW_NO_VERSION_HACKS`.
+- Feature: New compiler flag for ofxAddons implementing custom ofxImGui widgets: `ofxAddons_ENABLE_IMGUI`.
+- Feature: Possibility to encode font-files into the application binary.
+- **Newly introduced ImGui Features** : font-atlas refactor (breaks advanced font usage, glyphs load on the fly, improves DPI scaling), GLFW multi-context support and many more.
+- Improved: Docs and examples.
+- Fix some examples by @Moebiussurfing.
+- Fix iOS platform support by @Roymacdonald.
+- Fix non-clang compilers by @GitBruno.
+- Fix some imgui_impl_glfw features not being detected on some OF versions.
+- Fix engine OpenFrameworks rendering the GUI twice.
+
+
+- - - -
+
+# ofxImGui 1.91.0 (develop)
+
+- Feature: `isMaster()` by @Moebiussurfing.
+- **Newly introduced ImGui Features** : New widgets (multi-select, box-select, item flags, links) and more.
+- Improved: Warnings when using `GL_TEXTURE_RECTANGLE` instead of ` GL_TEXTURE_2D`.
+- Improved: Lots of new documentation.
 - Fix issue where default font was overwritten loading a first custom font.
-- Newly introduced ImGui Features : multi-select, box-select, item flags, links.
+- Fix SWIG binding compatibility by @Jonathhhan.
+- Fix examples by @GitBruno.
 
 - - - -
 
 # ofxImGui 1.82 (develop)
+
 This is a major update for ofxImGui. Prior to this version, DearImGui was bound to openFrameworks using a "custom backend code".
 DearImGui has grown considerably over time, but some of the new (optional but nice) features require an advanced backend code, which is now provided by ImGui. For these features to be enabled, DearImGui now needs to be bound to the OS' windowing framework (GLFW). Luckily this is currently the same as most OpenFrameworks projects, and other popular windowing frameworks are also covered in case OpenFrameworks moves away from GLFW.
 
