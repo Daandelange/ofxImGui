@@ -123,7 +123,7 @@ namespace ofxImGui
 
 #ifdef OFXIMGUI_DEBUG
 			ofLogNotice("Gui::setup()") << "Context " << context << "/" << context->imguiContext << " already exists in window " << _ofWindow.get() << ", using the existing context as a shared one.";
-			if(autoDraw_) ofLogWarning("Gui::setup()") << "You requested to enable Autodraw, but this is a Slave setting. Not enabling autoDraw.";
+			if(autoDraw_) ofLogWarning("Gui::setup()") << "You requested to enable Autodraw, but this is a Slave instance. Not enabling autoDraw.";
 #endif
         }
         // Create a unique context for this window
@@ -147,7 +147,7 @@ namespace ofxImGui
 			// Enable autodraw
 			if( autoDraw_ && _ofWindow!=nullptr ){
 				context->autoDraw = true;
-				autoDrawListener = _ofWindow->events().draw.newListener( this, &Gui::afterDraw, OF_EVENT_ORDER_AFTER_APP );
+				autoDrawListener = _ofWindow->events().draw.newListener( this, &Gui::autoDraw, OF_EVENT_ORDER_AFTER_APP );
             }
 
 #ifdef OFXIMGUI_DEBUG
@@ -641,10 +641,15 @@ namespace ofxImGui
     void Gui::render(){
         if( context==nullptr ) return;
 
+        ofEventArgs a;
+        beforeDraw.notify(a);
+
 		ImGui::SetCurrentContext(context->imguiContext);
         ImGui::Render();
 		context->engine.render();
 		context->isRenderingFrame = false;
+
+        afterDraw.notify(a);
     }
 
 	//--------------------------------------------------------------
@@ -665,7 +670,7 @@ namespace ofxImGui
 	}
 
 	//--------------------------------------------------------------
-    void Gui::afterDraw( ofEventArgs& ){
+	void Gui::autoDraw( ofEventArgs& ){
 
         // This function is registered after ofApp::draw() to honor autodraw in shared context mode.
 		if(context && context->isRenderingFrame ){
@@ -1472,6 +1477,10 @@ namespace ofxImGui
 
 	ofRectangle Gui::getDockingViewport() const {
 		return dockingViewport;
+	}
+
+	bool Gui::isAutoDrawEnabled() const {
+		return context->autoDraw;
 	}
 
     // Initialise statics

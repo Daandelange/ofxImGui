@@ -174,7 +174,9 @@ namespace ofxImGui
 		GLuint loadTexture(ofTexture& texture, const std::string& imagePath);
 		// todo: updateFontTexture ?
 
-        void afterDraw(ofEventArgs& _args); // Listener
+        void autoDraw(ofEventArgs& _args); // draw listener func (own notifier method)
+        ofEvent<ofEventArgs&> beforeDraw; // For listening
+        ofEvent<ofEventArgs&> afterDraw; // For listening
 
 		// Helper window to debug ofxImGui specific stuff, and provide some hints on your setup.
 		void drawOfxImGuiDebugWindow(bool* open=nullptr) const;
@@ -184,6 +186,7 @@ namespace ofxImGui
 		ofRectangle getMainWindowViewportRect(bool returnScreenCoords=false, bool removeMenuBar=true, bool removeDockingAreas=true) const;
 		int getMenuHeight() const;
 		ofRectangle getDockingViewport() const;
+		bool isAutoDrawEnabled() const;
 
     private:
         void render();
@@ -205,7 +208,7 @@ namespace ofxImGui
 		std::vector<ofTexture*> loadedTextures; // Textures owned by ofxImGui. Fixme: no multi-instance support, singleton this ! shared_ptr ??
 
 		ofRectangle dockingViewport;
-		int menuHeight;
+		int menuHeight = 16;
 
 		void updateDockingVp();
 

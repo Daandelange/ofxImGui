@@ -17,6 +17,7 @@ Git [commit tags](https://github.com/jvcleave/ofxImGui/tags) :
 - Feature: New compiler flag to disable glfw version hacks `OFXIMGUI_GLFW_NO_VERSION_HACKS`.
 - Feature: New compiler flag for ofxAddons implementing custom ofxImGui widgets: `ofxAddons_ENABLE_IMGUI`.
 - Feature: Possibility to encode font-files into the application binary.
+- Feature: AfterDraw and BeforeDraw event listeners, facilitating render order.
 - **Newly introduced ImGui Features** : font-atlas refactor (breaks advanced font usage, glyphs load on the fly, improves DPI scaling), GLFW multi-context support and many more.
 - Improved: Docs and examples.
 - Fix some examples by @Moebiussurfing.

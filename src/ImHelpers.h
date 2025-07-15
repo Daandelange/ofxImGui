@@ -150,7 +150,6 @@ static ImTextureID GetImTextureID(const ofBaseHasTexture& hasTexture)
 
 static ImTextureID GetImTextureID(GLuint glID)
 {
-    
     return (ImTextureID)(uintptr_t)glID;
 
 }

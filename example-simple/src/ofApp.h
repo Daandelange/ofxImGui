@@ -11,86 +11,17 @@ class ofApp : public ofBaseApp{
 	public:
         ofApp() {}
 
-		void setup() {
-			ofSetLogLevel(OF_LOG_VERBOSE);
-            #ifdef USE_AUTODRAW
-            gui.setup(nullptr, true, ImGuiConfigFlags_ViewportsEnable, true );
-            #else
-            gui.setup(nullptr, false);
-            #endif
-		}
+        void setup() override;
+        void exit() override;
+        void draw() override;
+        void update() override;
 
-		void draw() {
-            ofSetBackgroundColor(backGroundColor[0]*100, backGroundColor[1]*100, backGroundColor[2]*100);
-
-            // Start drawing to ImGui (newFrame)
-			gui.begin();
-
-			if(bDrawOfxImGuiDebug){
-				gui.drawOfxImGuiDebugWindow();
-			}
-
-            // Create a new window
-            ImGui::Begin("ofxImGui example-simple");
-
-            // Method 1 - Passing variables to ImGui
-            // In ImGui code, you'll often find static (stack) variables, as below.
-            // They are created once in a stack and remain accessible there, unlike non-static variables which get destructed once the stack closes.
-            // Many arguments you pass to ImGui functions need to remain valid between frames. (they are passed by reference [&])
-            static bool staticBool = false;
-            ImGui::Checkbox("Checkbox", &staticBool);
-            ImGui::Checkbox("Show ofxImGui Debug Window", &bDrawOfxImGuiDebug);
-
-            // You can hide and show Gui parts on demand
-            if(staticBool){
-                ImGui::Text("The checkbox above is checked.");
-            }
-
-            ImGui::Dummy(ImVec2(10,10));
-            ImGui::Separator();
-
-            // Method 2 - Passing variables to ImGui
-            // This method is closer to OF practises, defining it as a member variable of your ofApp, and passing it to ImGui as a reference.
-            ImGui::Checkbox("Draw lines", &drawLines);
-            ImGui::ColorEdit3("Background color", &backGroundColor[0]);
-            ImGui::SliderFloat("Float Slider", &v1, -10.f, 10.f);
-
-            // Close the main window
-            ImGui::End();
-
-            // The GUI hasn't been rendered yet : we can still draw below it
-            if(drawLines){
-                auto halfWidth = ofGetWidth()*.5f;
-                auto halfHeight = ofGetHeight()*.5f;
-                ofDrawLine( halfWidth+ofRandomf()*halfWidth, halfHeight+ofRandomf()*halfHeight, halfWidth+ofRandomf()*halfWidth, halfHeight+ofRandomf()*halfHeight );
-            }
-            ofDrawBitmapStringHighlight( "Float value used in oF: " +ofToString(v1), 10, 20);
-
-            // End our ImGui Frame.
-            gui.end();
-
-            #ifdef USE_AUTODRAW
-            ofDrawBitmapStringHighlight( "I'm below the Gui !", 10, 40); // <-- This text will be over below the gui, except in shared mode
-            #else
-            gui.draw(); // <-- In manual mode, you can choose to render imgui at a given moment in your rendering pipeline
-            ofDrawBitmapStringHighlight( "I'm over the Gui thanks to manual draw !", 10, 40); // <-- This text will be drawn over the gui
-            #endif
-
-            // If shared mode is on together with autodraw, rendering will happen after this scope, using the ofApp::draw callback.
-		}
-
-        void update(){
-            // Gui variables are also accessible outside of the draw() loop.
-            int v1copy = v1;
-            v1copy*=1;// silence "unused variable" warning !
-        }
-
+        void afterDraw(ofEventArgs&);
     private:
         ofxImGui::Gui gui;
 
         // Variables exposed to ImGui
-        float v1 = 0;
+        float numLines = 10;
         float backGroundColor[3] = {1,1,1};
         bool drawLines = false;
-	bool bDrawOfxImGuiDebug = false;
 };
