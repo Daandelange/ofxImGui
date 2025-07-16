@@ -12,7 +12,15 @@ ofxImGui::Settings::Settings()
 
 bool ofxImGui::IsMouseOverGui()
 {
-	return ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow);
+	return ImGui::GetIO().WantCaptureMouse;
+	// Old way
+	// Note: Window hoved turns off when widgets are active, so we check that too
+	//return ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) || ImGui::IsAnyItemActive();
+}
+
+bool ofxImGui::IsAnyGuiActive()
+{
+	return ImGui::IsAnyItemActive();
 }
 
 //--------------------------------------------------------------

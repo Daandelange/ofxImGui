@@ -25,15 +25,12 @@ namespace ofxImGui {
 }
 
 // A scoped struct to set the correct context and restores it when destroyed
-// Reduces
+// Reduces amount of code changes in original lib code
 struct ImGui_ImplGlfw_ScopedContext {
 		friend class ofxImGui::Gui;
 	public:
-		inline ImGui_ImplGlfw_ScopedContext(GLFWwindow* window): prevContext(ImGui::GetCurrentContext()){
-			ImGuiContext* context = Contexts.findData(window);
-			if(context){
-				ImGui::SetCurrentContext(context);
-			}
+		ImGui_ImplGlfw_ScopedContext(GLFWwindow* window) : prevContext(calcPrevContext(window)){
+
 		}
 		~ImGui_ImplGlfw_ScopedContext(){
 			if(prevContext != nullptr){
@@ -48,6 +45,17 @@ struct ImGui_ImplGlfw_ScopedContext {
 		}
 
 	private:
+		static ImGuiContext* calcPrevContext(GLFWwindow* window){
+			ImGuiContext* prevContext = ImGui::GetCurrentContext();
+			if(prevContext){
+				ImGuiContext* context = Contexts.findData(window);
+				if(context && context != prevContext){
+					ImGui::SetCurrentContext(context);
+					return prevContext;
+				}
+			}
+			return (ImGuiContext*) nullptr;
+		}
 		ImGuiContext* const prevContext;
 		// Contains all standalone viewport windows.
 		static LinkedList<GLFWwindow, ImGuiContext*> Contexts;

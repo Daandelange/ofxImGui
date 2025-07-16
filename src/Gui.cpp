@@ -1483,6 +1483,14 @@ namespace ofxImGui
 		return context->autoDraw;
 	}
 
+	bool Gui::wantsCaptureMouse() const {
+		return ImGui::GetIO().WantCaptureMouse;
+	}
+
+	bool Gui::wantsCaptureKeyboard() const {
+		return ImGui::GetIO().WantCaptureKeyboard;
+	}
+
     // Initialise statics
 	//LinkedList<ofAppBaseWindow, ofxImGuiContext> Gui::imguiContexts = {};
 	std::unordered_map<ofAppBaseWindow*, ofxImGuiContext> Gui::imguiContexts = {};

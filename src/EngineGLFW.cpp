@@ -164,9 +164,11 @@ namespace ofxImGui
 	{
 
 		// Ensure GL is in a compatible state
+#if IMGUI_VERSION_NUM <= 19210 && IMGUI_VERSION_NUM >= 19200
 		// Note: required for ofApps that use ofTexture which can set/leave this to a different value.
 		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 		glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+#endif
 
         if (ofIsGLProgrammableRenderer()) {
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -725,7 +727,7 @@ namespace ofxImGui
 		// Set context
 		if(!setImGuiContext()) return;
 
-		// This one is a little too ahrd to port, let's behave like EngineOpenFrameworks
+		// This one is a little too hard to port, let's behave like EngineOpenFrameworks
 		// ImGui_ImplGlfw_KeyCallback((GLFWwindow*)ofGetWindowPtr()->getWindowContext(), ...);
 
 		int key = event.keycode; // Todo: this seems to be window specific ?

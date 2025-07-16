@@ -188,6 +188,10 @@ namespace ofxImGui
 		ofRectangle getDockingViewport() const;
 		bool isAutoDrawEnabled() const;
 
+		// Event helpers
+		bool wantsCaptureMouse() const;
+		bool wantsCaptureKeyboard() const;
+
     private:
         void render();
 		static void initialiseForWindow();
