@@ -44,7 +44,7 @@
 void FxTestBed(bool* _pOpen=nullptr)
 {
     ImGuiIO& io = ImGui::GetIO();
-    ImGui::Begin("FX", _pOpen, ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::Begin("1kb ecosystem by @Daandelange###FX", _pOpen, ImGuiWindowFlags_AlwaysAutoResize); // Modified line !
     ImVec2 size(320.0f, 180.0f);
     ImGui::InvisibleButton("canvas", size);
     ImVec2 p0 = ImGui::GetItemRectMin();

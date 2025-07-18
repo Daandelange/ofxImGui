@@ -18,14 +18,20 @@ Git [commit tags](https://github.com/jvcleave/ofxImGui/tags) :
 - Feature: New compiler flag for ofxAddons implementing custom ofxImGui widgets: `ofxAddons_ENABLE_IMGUI`.
 - Feature: Possibility to encode font-files into the application binary.
 - Feature: AfterDraw and BeforeDraw event listeners, facilitating render order.
+- Feature: isAutoDrawEnabled getter.
+- Feature: New event helper class `GuiEventHelper` (to bind non-gui IO events).
+- Feature: New ofxImGuiDebugWindow input test section.
 - **Newly introduced ImGui Features** : font-atlas refactor (breaks advanced font usage, glyphs load on the fly, improves DPI scaling), GLFW multi-context support and many more.
-- Improved: Docs and examples.
+- Improve Docs and examples.
+- Improve GLFW context helper, prevent useless push/pop states.
 - Fix some examples by @Moebiussurfing.
-- Fix iOS platform support by @Roymacdonald.
-- Fix non-clang compilers by @GitBruno.
+- Fix iOS platform support by [@Roymacdonald].
+- Fix non-clang compilers by [@GitBruno].
 - Fix some imgui_impl_glfw features not being detected on some OF versions.
 - Fix engine OpenFrameworks rendering the GUI twice.
-
+- Fix mouse-hover helpers for daandelange#17 [@moebiussurfing].
+- Fix: Prepare for future upstream ImGui changes.
+- Fix: Add License.md
 
 - - - -
 

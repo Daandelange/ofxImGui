@@ -182,7 +182,11 @@ namespace ofxImGui
             ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
             //glUseProgram(last_program);
         }
+        updatePlatformWindows();
+    }
 
+    //--------------------------------------------------------------
+    void EngineGLFW::updatePlatformWindows(){
         // Handle multi-viewports
         ImGuiIO& io = ImGui::GetIO();
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable){

@@ -160,6 +160,7 @@ namespace ofxImGui
         ImFont* addFontFromMemory(void* fontData, int fontDataSize, float fontSize = 13.0f, const ImFontConfig* _fontConfig = nullptr, const ImWchar* _glyphRanges = nullptr, bool _setAsDefaultFont=false );
         bool rebuildFontsTexture();
 
+		// setTheme takes ownership of passed instance
 		void setTheme(BaseTheme* theme);
 
 		// Prefer storing your own textures and forwarding textureids !
@@ -223,5 +224,15 @@ namespace ofxImGui
 
 		//static LinkedList<ofAppBaseWindow*, ofxImGuiContext> imguiContexts; // Window/MasterContext map
 		static std::unordered_map<ofAppBaseWindow*, ofxImGuiContext> imguiContexts; // Window/MasterContext map
+
+		// Input debug helper vars
+#ifdef OFXIMGUI_DEBUG
+#define OFXIMGUI_DEBUG_INPUT_CHARS_LEN 10
+        bool bDebugWindowBoundToOF = false;
+        static bool bInputDebugIgnoreWhenImGuiActive;
+        char lastPressedCharsOF[OFXIMGUI_DEBUG_INPUT_CHARS_LEN] = {"         "};
+        char lastPressedCharsIM[OFXIMGUI_DEBUG_INPUT_CHARS_LEN] = {"         "};
+        void recordOfKeyPresses(ofKeyEventArgs& args);
+#endif
 	};
 }

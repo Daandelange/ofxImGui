@@ -20,6 +20,7 @@ Shows advanced use of imgui within OF, below are some covered topics :
  - How to relate ImGui and oF coordinate systems.
  - How to use the ImGui draw API.
  - It also lets you view the ImGui metrics window, useful for seeing how ImGui is interfaced with oF, it's current inner state and global inspector for debugging purposes.
+ - User-input filtering (distinguish OF events from imgui-consumed-events), manually or with helper.
 
 ## example-demo    
 

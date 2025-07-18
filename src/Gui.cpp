@@ -29,6 +29,19 @@
 			#include "backends/imgui_impl_glfw_context_support.h"
 		#endif
 #endif
+
+// KeyPress input debug helper
+void appendCharToPressedChars(const char theChar, char (&lastPressedChars)[OFXIMGUI_DEBUG_INPUT_CHARS_LEN]){
+    if(theChar < ' ' || theChar > '~') return; // ignore invisible chars
+    unsigned int i = 0;
+    for(char& c : lastPressedChars){
+        // leave last (ending) char alone, it's a delimiter
+        if(i==OFXIMGUI_DEBUG_INPUT_CHARS_LEN-1) break;
+        if(i+2<sizeof(lastPressedChars)) c = lastPressedChars[i+1];
+        else c = theChar;
+        i++;
+    }
+}
 #endif
 
 //#ifdef OFXIMGUI_BACKEND_GLFW
@@ -230,6 +243,14 @@ namespace ofxImGui
 			setTheme((BaseTheme*)defaultTheme);
 		}
 
+#ifdef OFXIMGUI_DEBUG
+		// Start keypress input debug helper
+		if(!bDebugWindowBoundToOF){
+			ofAddListener(ofEvents().keyPressed, this, &Gui::recordOfKeyPresses, OF_EVENT_ORDER_BEFORE_APP);
+			bDebugWindowBoundToOF = true;
+		}
+#endif
+
 		return SetupState::Master;
 	}
 
@@ -301,7 +322,13 @@ namespace ofxImGui
 			// Slaves set their context to nullptr without destroying anything
 			context = nullptr;
 		}
-		
+
+		// Unbind debug event listeners
+#ifdef OFXIMGUI_DEBUG
+		if(bDebugWindowBoundToOF){
+			ofRemoveListener(ofEvents().keyPressed, this, &Gui::recordOfKeyPresses, OF_EVENT_ORDER_BEFORE_APP);
+		}
+#endif
 	}
 
     //--------------------------------------------------------------
@@ -579,6 +606,13 @@ namespace ofxImGui
         //std::cout << "New Frame in context " << context << " in window " << ofGetWindowPtr() << " (" << ofGetWindowPtr()->getWindowSize().x << ")" << std::endl;
 		context->engine.newFrame();
         ImGui::NewFrame();
+
+        // Sync IO debug chars
+#ifdef OFXIMGUI_DEBUG
+        if(ImGui::GetIO().InputQueueCharacters.Size > 0) for(ImWchar c : ImGui::GetIO().InputQueueCharacters){
+            appendCharToPressedChars(static_cast<char>(c), lastPressedCharsIM);
+        }
+#endif
 
 		context->isRenderingFrame = true;
 	}
@@ -1373,6 +1407,133 @@ namespace ofxImGui
 					ImGui::EndTabItem();
 				}
 
+				// Input TAB
+				if (ImGui::BeginTabItem("Input tests")){
+
+					ImGui::Dummy({10,10});
+					ImGui::TextWrapped("This window helps debugging how user input is handled.");
+
+					ImGui::Dummy({10,10});
+					ImGui::SeparatorText("Key and mouse press tests");
+					if(ImGui::BeginTable("press-inputs", 4)){
+						bool isAnyImGuiKeyDown = false;
+						for (ImGuiKey key = ImGuiKey_NamedKey_BEGIN; key < ImGuiKey_NamedKey_END; key = (ImGuiKey)(key + 1)){
+							if(ImGui::IsKeyDown(key)){
+								isAnyImGuiKeyDown = true;
+								break;
+							}
+
+							// Additional keys are non-keyboard
+							if(key > ImGuiKey_Oem102) break;
+						}
+
+						const bool ofMousePressed = ofGetMousePressed(OF_MOUSE_BUTTON_1);
+						const bool ofKeyPressed = ofGetKeyPressed();
+						ImGui::TableSetupColumn("Input");
+						ImGui::TableSetupColumn("ofCoreEvents");
+						ImGui::TableSetupColumn("ofAppFiltered");
+						ImGui::TableSetupColumn("ImGui IO");
+						ImGui::TableHeadersRow();
+
+						ImGui::TableNextRow();
+						ImGui::TableNextColumn();
+						ImGui::Text("isLeftMousePressed");
+						ImGui::TableNextColumn();
+						ImGui::Text("%i", ofMousePressed);
+						ImGui::TableNextColumn();
+						ImGui::Text("%i", 1*(ofMousePressed && !wantsCaptureMouse()));
+						ImGui::TableNextColumn();
+						ImGui::Text("%i", ImGui::IsMouseDown(ImGuiMouseButton_Left));
+
+						ImGui::TableNextRow();
+						ImGui::TableNextColumn();
+						ImGui::Text("isAnyKeyPressed");
+						ImGui::TableNextColumn();
+						ImGui::Text("%i", ofKeyPressed);
+						ImGui::TableNextColumn();
+						ImGui::Text("%i", 1*(ofKeyPressed && !wantsCaptureKeyboard()));
+						ImGui::TableNextColumn();
+						ImGui::Text("%i", 1*isAnyImGuiKeyDown);
+
+						ImGui::EndTable();
+					}
+					ImGui::TextDisabled("ofCoreEvents and ImGui IO should report the same.");
+					ImGui::TextDisabled("ofAppFiltered should stay off when ImGui is consumeing them.");
+
+					ImGui::Dummy({10,10});
+					ImGui::SeparatorText("Character Input");
+					ImGui::TextWrapped("The following strings track keypress history from ImGui and OpenFrameworks.");
+					ImGui::TextWrapped("When ImGui \"consumes\" the key, it should not append to both of these.");
+
+					ImGui::Dummy({10,10});
+					ImGui::Checkbox("Ignore when ImGuiWantCaptureKeyboard", &bInputDebugIgnoreWhenImGuiActive);
+
+					ImGui::Dummy({10,10});
+					ImGui::BulletText("ofEvents()");
+					ImGui::SameLine();
+					ImGui::BeginGroup();
+					ImGui::Text("Chars: ");
+					static char buf[4] = {' ',' ',' ','\0'};
+					unsigned int i = 0u;
+					for(const char& c : lastPressedCharsOF){
+						ImGui::SameLine();
+						buf[0] = (c >= ' '&& c <= '~')?c:' ';
+						ImGui::Text("%s", buf);
+						i++;
+						if(i==9u) break;
+					}
+					ImGui::Text("Nums :");
+					i = 0u;
+					for(const char& c : lastPressedCharsOF){
+						ImGui::SameLine();
+						ImGui::Text("%03i", (int)c);
+						i++;
+						if(i==9u) break;
+					}
+					ImGui::EndGroup();
+
+					ImGui::BulletText("ImGui.IO  ");
+					ImGui::SameLine();
+					ImGui::BeginGroup();
+					ImGui::Text("Chars: ");
+					i = 0u;
+					for(const char& c : lastPressedCharsIM){
+						ImGui::SameLine();
+						buf[0] = (c >= ' '&& c <= '~')?c:' ';
+						ImGui::Text("%s", buf);
+						i++;
+						if(i==9u) break;
+					}
+					i = 0u;
+					ImGui::Text("Nums :");
+					for(const char& c : lastPressedCharsIM){
+						ImGui::SameLine();
+						ImGui::Text("%03i", (int)c);
+						i++;
+						if(i==9u) break;
+					}
+
+					if(bInputDebugIgnoreWhenImGuiActive)
+						ImGui::TextDisabled("OF should not append imgui-consumed keypresses.");
+					else
+						ImGui::TextDisabled("Both should remain identical (except repeats).");
+
+					ImGui::EndGroup();
+
+					ImGui::Dummy({10,10});
+					static char tmpText[20];
+					ImGui::InputText("Dummy Input", tmpText, 20);
+					ImGui::TextDisabled("Write here to catch imgui input events !");
+
+					// Window pop-out warning
+					if(!(ImGui::GetCurrentWindow()->Viewport->Flags & ImGuiViewportFlags_OwnedByApp)){
+						ImGui::Dummy({10,10});
+						ImGui::TextWrapped("WARNING!\nThis window is popped-out, please put it back into the main ofWindow to ensure events are correctly tracked !");
+					}
+
+					ImGui::EndTabItem();
+				}
+
 				ImGui::EndTabBar();
 			} // End tabs
 		}
@@ -1494,5 +1655,13 @@ namespace ofxImGui
     // Initialise statics
 	//LinkedList<ofAppBaseWindow, ofxImGuiContext> Gui::imguiContexts = {};
 	std::unordered_map<ofAppBaseWindow*, ofxImGuiContext> Gui::imguiContexts = {};
+
+#ifdef OFXIMGUI_DEBUG
+	void Gui::recordOfKeyPresses(ofKeyEventArgs &args){
+		if(bInputDebugIgnoreWhenImGuiActive && ImGui::GetIO().WantCaptureKeyboard) return;
+		if(!args.isRepeat) appendCharToPressedChars(args.key, lastPressedCharsOF);
+	}
+	bool Gui::bInputDebugIgnoreWhenImGuiActive = true;
+#endif
 }
 

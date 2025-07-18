@@ -58,6 +58,7 @@ namespace ofxImGui
 
         void newFrame() override;
         void render() override;
+        void updatePlatformWindows(); // Not recommended to call manually
 
         bool updateFontsTexture() override;
 
