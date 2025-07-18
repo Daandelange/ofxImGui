@@ -11,7 +11,12 @@ class ofApp : public ofBaseApp{
 
 		void setup() {
             // Setup imgui with the appropriate config flags
-            gui.setup(nullptr, false, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true);
+            ofxImGui::BaseTheme* theme_ = nullptr;
+            bool autoDraw_ = false; 
+            ImGuiConfigFlags customFlags_ = ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
+            bool restoreGuiState_ = true;
+            bool showImGuiMouseCursor_ = false;
+            gui.setup(theme_, autoDraw_, customFlags_, restoreGuiState_, showImGuiMouseCursor_);
 
             // Uncomment below to perform docking with SHIFT key
             // Gives a better user experience, matter of opinion.
