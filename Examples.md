@@ -35,7 +35,7 @@ Load custom fonts and fontawesome into ofxImGui.
 
 ofxImGui helper functions, mostly for interfacing with `ofParameter`. Useful for transitioning from ofxGui, or usage with ofParameters.
 
-## example-ios  
+## example-ios
 
 iOS specific with keyboard input helper.
 
@@ -56,4 +56,5 @@ How to use one ImGui instance in a **multiwindow ofApp**. GUIs are isolated. Som
 
 ## example-imguizmo
 
-Shows how to **use an ImGui addon**. Requires [ofxImGuizmo](https://github.com/nariakiiwatani/ofxImGuizmo.git).
+Shows how to **use an ofxImGui addon**. Requires [ofxImGuizmo](https://github.com/nariakiiwatani/ofxImGuizmo.git).  
+For pure ImGui addons (many more), see example-advanced.
