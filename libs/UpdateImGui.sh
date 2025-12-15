@@ -27,7 +27,8 @@ VERSION_1_91_5=368123a # 1.91.5
 VERSION_1_91_9b=4806a19 # 1.91.5
 VERSION_1_92_0=adfa536 # 1.92.0
 VERSION_1_92_1=44aa9a4 # 1.92.1
-VERSION_SHA=$VERSION_1_92_1
+VERSION_1_92_5=3912b3d # 1.92.5
+VERSION_SHA=$VERSION_1_92_5
 # ------------------
 
 echo "\nHello,"
@@ -76,7 +77,7 @@ cp ./imgui_git/backends/imgui_impl_opengl3_loader.h ./imgui/backends/imgui_impl_
 
 # Source files
 echo "Copying source files..."
-mkdir -p ./imgui_git/src
+mkdir -p ./imgui/src
 cp ./imgui_git/imgui_demo.cpp		./imgui/src/imgui_demo.cpp
 cp ./imgui_git/imgui_draw.cpp		./imgui/src/imgui_draw.cpp
 cp ./imgui_git/imgui_internal.h		./imgui/src/imgui_internal.h
@@ -91,7 +92,7 @@ cp ./imgui_git/LICENSE.txt			./imgui/src/LICENSE.txt
 
 # Copy some docs
 echo "Copying some docs..."
-mkdir -p ./imgui_git/docs
+mkdir -p ./imgui/docs
 #cp ./imgui_git/docs/ ./imgui/docs
 mv ./imgui_git/docs/BACKENDS.md		./imgui/docs/BACKENDS.md
 mv ./imgui_git/docs/CHANGELOG.txt	./imgui/docs/CHANGELOG.txt
@@ -99,7 +100,7 @@ mv ./imgui_git/docs/README.md		./imgui/docs/README.md
 
 #copy extras
 echo "Copying extras..."
-mkdir -p ./imgui_git/extras
+mkdir -p ./imgui/extras
 cp ./imgui_git/misc/cpp/imgui_stdlib.cpp ./imgui/extras/imgui_stdlib.cpp
 cp ./imgui_git/misc/cpp/imgui_stdlib.h ./imgui/extras/imgui_stdlib.h
 
