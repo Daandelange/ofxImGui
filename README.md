@@ -187,6 +187,7 @@ Also: information for using ofxImGui within ofxAddons and for ofxImGui developer
 - [funatsufumiya/ofxImGuiAuto](https://github.com/funatsufumiya/ofxImGuiAuto): A GUI helper focused on parameters load+save.
 - [Artificiel/ofxImGuiLib](https://gitlab.artificiel.org/ofxaddons/ofxImGuiLib/): A set of personal GUI helpers.
 - [Artificiel/ofxImGuiTextEditor](https://gitlab.artificiel.org/ofxaddons/ofxImGuiTextEditor): A syntax highlighting text editor based on [BalazsJako/ImGuiColorTextEdit](https://github.com/BalazsJako/ImGuiColorTextEdit).
+- [Daandelange/ofxSimpleApp](https://github.com/Daandelange/ofxSimpleApp): A general purpose application layout for kick-starting your projects.
 
 #### ofxAddons providing native ofxImGui integration
 

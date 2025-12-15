@@ -9,6 +9,11 @@ By setting them explicitly, you can enforce a specific way to meet your needs.
 
 An easy way to get started is to call the configuration assistant (see below) and interactively explore your options.
 
+> [!TIP]
+> ** Configuration assistant**
+> To have an insight on how your ofxImGui interfaces with ImGui and OpenFrameworks, you can call `gui.drawOfxImGuiDebugWindow();` together with defining `OFXIMGUI_DEBUG`.
+> It contains an assistant that provides an oversight of your current configuration. It also provides some explanations and suggestions for gradually improving your configuration (to get the most out of OF+ImGui).
+
 ## Backends 
 
 All ImGui APIs need to define a **platform and renderer backend**. The platform backend handles window initialisation and interactions with ImGui. The renderer backend handles rendering to the created surface(s). 
@@ -24,28 +29,56 @@ If your projects needs to force a specific GL configuration, you can set some na
 
 ### Platform Backend
 
-By default, ofxImGui uses the official ImGui GLFW backend when using `ofAppGLFWWindow`, this ensures full compatibility with any ImGui feature, and is interfaced directly with GLFW. The OpenFrameworks engine is customly interfaced to OF and implements minimal ImGui support. [More info](./PlatformSupport.md#backend-support-table).
+By default, ofxImGui uses the official ImGui GLFW backend when using `ofAppGLFWWindow`, this ensures full compatibility with any ImGui feature, and is interfaced directly with GLFW.
+The OpenFrameworks engine is customly interfaced to OF and implements minimal ImGui support. [More info](./PlatformSupport.md#backend-support-table).
 
 Most supported OpenFrameworks build targets rely on GLFW (personal computer targets), with the exception of mobile targets (which use their respective platform windowing library), or linux builds without desktop environments (GLUT windows).
 
 You may force to use the openframeworks backend by defining :
- - `OFXIMGUI_FORCE_OF_BACKEND`
+ - `OFXIMGUI_FORCE_OF_BACKEND` (also reffered-to as ofxImGui Legacy, the closest to JVCleave's initial release)
 
 #### GLFW backend options
 
 You may also override some automatic macro defines (not recommended, there are drawbacks, but it might solve some very specific use cases):
 
-- `IMGUI_GLFW_INJECT_MULTICONTEXT_SUPPORT=0` to disable imgui_impl_glfw changes to support multiple context.  
-  Disables using ofxImGui within multiple `ofAppBaseWindow`s.
-- `INTERCEPT_GLFW_CALLBACKS=0` to use an alternative method to bind imgui to glfw events.  
-   - If `0`, ofxImGui doesn't add multi-context event routing, disabling multi-window-ofApp support.  
-     Event propagation: `GLFW -> ImGui -> OpenFrameworks`.
-   - If `1` (default), ofxImGui binds to GLFW, allowing to route events to the correct context instances.  
-     Event propagation: `GLFW -> ofxImGui -> (ImGui + OpenFrameworks)`.
+**GLFW event binding and input handling**
 
-### Configuration assistant
+- `OFXIMGUI_GLFW_EVENTS_REPLACE_OF_CALLBACKS=0|1` : (Default: 1)
+  Controls how the ImGui GLFW backend is bound to your `ofAppGlfwWindow` (primary viewports).
+  ImGui works best when directly bound to GLFW, as OpenFrameworks strips off some data before emiting the related GLFW ofEvents.
+  - `0` : Leave OpenFrameworks natively bound to GLFW, and use the ofEvent data transmitted by OpenFrameworks.
+    Event propagation: `GLFW --> OpenFrameworks --> ofxImGui --> ImGui`. Input is handled by ofxImGui.
+  - `1` : Bind directly to GLFW, replacing the ofApp listeners, forwarding them afterwards.
+    Event propagation: `GLFW -> ofxImGui -> (ImGui + OpenFrameworks)`. Input is handled by ImGui.
 
-To have an insight on how your ofxImGui interfaces ImGui, you can call `gui.drawOfxImGuiDebugWindow();` together with `OFXIMGUI_DEBUG`. It contains an assistant that provides an explanation of your current configuration. It also provides some suggestions for gradually improving your configuration (to get the most out of OF+ImGui).
+This setting also affects how user input is handled.
+OpenFrameworks gets its keyboard and mouse events from GLFW by default; and GLFW events can only be bound to 1 listener.
+ImGui can either be bound to OpenFrameworks events, or to the native GLFW events by unbinding the OF ones.
+Secondary viewports (created by ImGui) are always directly bound to ImGui.
+
+**Multi-Context support**
+
+The native GLFW ImGui backend doesn't support multiple contexts, which is needed for running ofxImGui in multi-window ofApps.  
+It's generally recommended to **put your GUI only in 1 window if you can**.  
+However, if you need multicontext support, there are two compilation options to enable support for it.
+Each `ofWindow` gets one context, contexts are isolated and cannot interact together (drag & drop, move windows, etc.). 
+None, one or both can be enabled simultanously, but they all require `OFXIMGUI_GLFW_EVENTS_REPLACE_OF_CALLBACKS=1`.
+
+- `OFXIMGUI_GLFW_FIX_MULTICONTEXT_PRIMARY_VP=0|1` : (Default: 0) 
+  Controls how GLFW callbacks are handled within primary viewports (`ofAppWindows`) :
+  - `0` : Let ImGui forward OpenFrameworks events.  
+    Event propagation: `GLFW --> ImGui --> OpenFrameworks`.
+  - `1` : Let ofxImGui forward OpenFrameworks events. Enables multi-context support only for ofWindows, but not for viewport (standalone) windows.  
+    Event propagation: `GLFW -> ofxImGui -> (ImGui + OpenFrameworks)`.
+- `OFXIMGUI_GLFW_FIX_MULTICONTEXT_SECONDARY_VP=0|1` : (Default: 1)  
+  Controls how ImGui handles GLFW callbacks within primary and secondary viewports (imgui standalone windows).  
+  Applies some changes to imgui_impl_glfw to manage a `window->context` map and set the right context prior to calling ImGui API calls.  
+  - `0` : Use native `imgui_impl_glfw`. No multi-context support.  
+    Event propagation: `GLFW --> ImGui --> OpenFrameworks`.
+  - `1` : Use modified `imgui_impl_glfw` allowing to set the correct context before dispatching GLFW callbacks.  
+    This enables support for multiple contexts in both ofWindows and standalone ImGui windows.  
+    Event propagation: According to `OFXIMGUI_GLFW_FIX_MULTICONTEXT_PRIMARY_VP`.
+
 
 - - - -
 

@@ -195,7 +195,7 @@ namespace ofxImGui
 
     private:
         void render();
-		static void initialiseForWindow();
+        static void initialiseForWindow();
 
 //#if defined (OFXIMGUI_FORCE_OF_BACKEND)
 //        EngineOpenFrameworks engine;

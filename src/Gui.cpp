@@ -1178,6 +1178,8 @@ namespace ofxImGui
 						ImGui::PopStyleColor();
 						ImGuiBackendFlags backend_flags = io.BackendFlags;
 						ImGui::CheckboxFlags("HasGamepad",             &backend_flags, ImGuiBackendFlags_HasGamepad);
+						ImGui::SameLine();
+						ImGui::TextDisabled("(and gamepad is detected)");
 						ImGui::CheckboxFlags("HasMouseCursors",        &backend_flags, ImGuiBackendFlags_HasMouseCursors);
 						ImGui::CheckboxFlags("HasSetMousePos",         &backend_flags, ImGuiBackendFlags_HasSetMousePos);
 						ImGui::CheckboxFlags("PlatformHasViewports",   &backend_flags, ImGuiBackendFlags_PlatformHasViewports);
@@ -1382,7 +1384,7 @@ namespace ofxImGui
 					ImGui::TextWrapped("Here's how you are currently bound :");
 	#if OFXIMGUI_GLFW_EVENTS_REPLACE_OF_CALLBACKS == 0
 					ImGui::Bullet(); ImGui::TextWrapped("GLFW --> OpenFrameworks --> ofxImGui --> ImGui");
-					ImGui::Bullet(); ImGui::TextWrapped("ImGui input is bound to ofEvents and directly send to ImGuiIO, bypassing the need for imgui_impl_glfw callbacks (custom backend implementation).\nEvent conversion is needed and might loose some non-crucial UX event data.");
+					ImGui::Bullet(); ImGui::TextWrapped("ImGui input is bound to ofEvents and directly send to ImGuiIO, bypassing the need for imgui_impl_glfw callbacks (custom backend implementation).\nEvent conversion is needed and might lose some non-crucial UX event data.");
 	#else
 		#if OFXIMGUI_GLFW_FIX_MULTICONTEXT_SECONDARY_VP == 1 && OFXIMGUI_GLFW_FIX_MULTICONTEXT_PRIMARY_VP == 1
 					ImGui::Bullet(); ImGui::TextWrapped("Primary viewports (ofAppBaseWindows) :\nGLFW --> ofxImGui --> ImGui --> OpenFrameworks");
@@ -1540,6 +1542,8 @@ namespace ofxImGui
 		// Close window space
 		ImGui::End();
 
+#else // OFXIMGUI_DEBUG
+		ImGui::TextDisabled("Disabled.\nOnly available when `OFXIMGUI_DEBUG` is set.");
 #endif // OFXIMGUI_DEBUG
 	}
 
